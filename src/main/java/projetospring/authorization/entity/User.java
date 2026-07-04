@@ -3,7 +3,8 @@ package projetospring.authorization.entity;
 import java.util.Set;
 import java.util.UUID;
 
-import jakarta.persistence.CascadeType;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,6 +15,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import projetospring.authorization.controller.dtos.LoginRequest;
 
 @Entity
 @Table(name="tb_users")
@@ -29,7 +31,7 @@ public class User {
     @Column(name="password")
     private String password;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "tb_users_roles",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -69,5 +71,7 @@ public class User {
         this.roles = roles;
     }
 
-    
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder){
+        return passwordEncoder.matches(loginRequest.password(), this.password);
+    }
 }
