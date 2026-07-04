@@ -31,3 +31,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### JWT Keys (Segurança) ###
+src/main/resources/app.pub
+src/main/resources/app.key
+
+### ENVIROMENT VALUES ###
+.env

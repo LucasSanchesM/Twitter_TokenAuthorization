@@ -1,10 +1,17 @@
+#Nota: os arquivos correspondentes a public e private key nao foram colocados no github por motivos obvios
+#Por isso caso queira testar o projeto será necessario criar suas proprias keys
+jwt:
+  public:
+    key: "classpath:app.pub"
+  private:
+    key: "classpath:app.key"
 spring:
   application:
     name: authorization
   datasource:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/mydb
-    username: admin
-    password: 123
+    username: ${DB_USER:admin}
+    password: ${DB_PASSWORD:123}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
