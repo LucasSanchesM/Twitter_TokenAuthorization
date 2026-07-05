@@ -1,9 +1,12 @@
 package projetospring.authorization.controller;
 
+import java.util.List;
 import java.util.Set;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +18,9 @@ import projetospring.authorization.entity.Role;
 import projetospring.authorization.entity.User;
 import projetospring.authorization.repository.RoleRepository;
 import projetospring.authorization.repository.UserRepository;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class UserController {
@@ -50,5 +56,11 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
     
-
+    @GetMapping("/list")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
+    public ResponseEntity<List<User>> listUsers() {
+        var list = userRepository.findAll();
+        return ResponseEntity.ok(list);
+    }
+    
 }

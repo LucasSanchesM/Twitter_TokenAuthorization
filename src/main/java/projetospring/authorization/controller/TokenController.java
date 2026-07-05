@@ -1,6 +1,7 @@
 package projetospring.authorization.controller;
 
 import java.time.Instant;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import projetospring.authorization.controller.dtos.LoginRequest;
 import projetospring.authorization.controller.dtos.LoginResponse;
+import projetospring.authorization.entity.Role;
 import projetospring.authorization.repository.UserRepository;
 
 
@@ -43,12 +45,20 @@ public class TokenController {
         var now = Instant.now();
         var expiresIn = 300L;
 
+        var scopes = user.get()
+                    .getRoles()
+                    .stream()
+                    .map(Role::getNome)
+                    .collect(Collectors.joining(" "));
+
         var claims = JwtClaimsSet.builder()
                         .issuer("meubackend")
                         .subject(user.get().getUserId().toString())
                         .issuedAt(now)
                         .expiresAt(now.plusSeconds(expiresIn))
+                        .claim("scope", scopes)
                         .build();
+                        
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
                         
         return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn));
